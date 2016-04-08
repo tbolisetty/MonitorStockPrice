@@ -27,6 +27,9 @@ public class Main {
         delete("stock/:id", (req, res) -> deleteStock(req));
     }
 
+
+    // db instance
+    // monitorstockpriceinstance.ctoveuujovpy.us-east-1.rds.amazonaws.com:3306
     private static Object listAll(Request req) throws IOException {
         String baseUrl = "http://query.yahooapis.com/v1/public/yql?q=";
 //        String query = "select * from upcoming.events where location='San Francisco' and search_text='dance'";
