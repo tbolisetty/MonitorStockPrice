@@ -7,12 +7,12 @@ public class UsersStock {
 
     private int userId;
 
+    private String stockSymbol;
+
     public UsersStock(int userId, String stockSymbol) {
         this.userId = userId;
         this.stockSymbol = stockSymbol;
     }
-
-    private String stockSymbol;
 
     public int getUserId() {
         return userId;

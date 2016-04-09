@@ -1,13 +1,12 @@
 package com.example;
 
-import static spark.Spark.delete;
-import static spark.Spark.get;
-import static spark.Spark.post;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import controller.CompanyController;
+import data.Stock;
+import data.StockDetails;
 import spark.Request;
 import spark.Response;
 
@@ -15,13 +14,24 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+import static spark.Spark.*;
 
 /**
  * Created by tejas on 4/5/2016.
  */
 public class Main {
+    static CompanyController controller;
+    static Gson gson;
+
     public static void main(String[] args) {
-        get("/list", (req, res) -> listAll(req));
+        controller = new CompanyController();
+        gson = new Gson();
+        get("/list/:id", (req, res) -> listCompanies(req));
         post("/stock", (req, res) -> add(req));
         get("/history/:id", (req, res) -> getHistory(req));
         delete("stock/:id", (req, res) -> deleteStock(req));
@@ -30,57 +40,37 @@ public class Main {
 
     // db instance
     // monitorstockpriceinstance.ctoveuujovpy.us-east-1.rds.amazonaws.com:3306
-    private static Object listAll(Request req) throws IOException {
-        /*String baseUrl = "http://query.yahooapis.com/v1/public/yql?q=";
-//        String query = "select * from upcoming.events where location='San Francisco' and search_text='dance'";
-        String query = "select * from yahoo.finance.quote where symbol in ('YHOO','AAPL','GOOG','MSFT')";
-        String endUrl="&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
-        String fullUrlStr = baseUrl + URLEncoder.encode(query, "UTF-8") + endUrl;
-        URL fullUrl = new URL(fullUrlStr);
-
-        HttpURLConnection conn =
-                (HttpURLConnection) fullUrl.openConnection();
-
-        if (conn.getResponseCode() != 200) {
-            throw new IOException(conn.getResponseMessage());
-        }
-
-        // Buffer the result into a string
-        BufferedReader rd = new BufferedReader(
-                new InputStreamReader(conn.getInputStream()));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        Gson gson = new Gson();
-        while ((line = rd.readLine()) != null) {
-
-            sb.append(line);
-            JsonArray  jarry= new JsonParser().parse(sb.toString()).getAsJsonArray();
-            for(int i=0;i<jarry.size();i++){
-                JsonObject jobj= jarry.get(0).getAsJsonObject();
-            }
-        }
-
-//        String json= gson.toJson(sb.toString());
-
-        rd.close();
-
-        conn.disconnect();
-        return sb.toString();
-//        InputStream is = fullUrl.openStream();*/
-
-        return "list";
+    private static Object listCompanies(Request req) throws IOException {
+        ArrayList<Stock> stocks = controller.listCompanies(Integer.parseInt(req.params("id")));
+        return gson.toJson(stocks);
     }
 
-    private static Object getHistory(Request req) {
-        return "history" + req.params("id");
+    private static Object getHistory(Request req) throws ParseException {
+        int userId = Integer.parseInt(req.params("id"));
+        String company = req.params("company");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+        Date startDate = sdf.parse(req.params("startDate"));
+        Date endDate = sdf.parse(req.params("endDate"));
+        ArrayList<StockDetails> sdetails = controller.companyHistory(userId, company, startDate, endDate);
+
+        return gson.toJson(sdetails);
     }
 
     private static Object deleteStock(Request req) {
-        return "deleted"+ req.params("id");
+        int userId = Integer.parseInt(req.params("id"));
+        String company = req.params("company");
+        controller.deleteCompany(userId, company);
+        return "deleted" + req.params("company");
     }
 
 
     private static String add(Request req) {
-        return "Added";
+        int userId = Integer.parseInt(req.params("id"));
+        String company = req.params("company");
+        boolean added = controller.addNewCompany(userId, company);
+        if (added) {
+            return req.params("company") + " Added";
+        }
+        return "Error";
     }
 }
