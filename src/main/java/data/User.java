@@ -1,4 +1,4 @@
-package com.example;
+package data;
 
 import javax.jws.soap.SOAPBinding;
 
@@ -35,7 +35,7 @@ public class User {
         this.id = id;
     }
 
-    User(int id, String username, String password){
+    public User(int id, String username, String password){
         this.id=id;
         this.username=username;
         this.password=password;

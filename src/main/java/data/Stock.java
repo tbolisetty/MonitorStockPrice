@@ -1,4 +1,4 @@
-package com.example;
+package data;
 
 /**
  * Created by tejas on 4/7/2016.
@@ -10,6 +10,11 @@ public class Stock {
 
     public String getStockSymbol() {
         return stockSymbol;
+    }
+
+    public Stock(String stockSymbol, String stockName) {
+        this.stockSymbol = stockSymbol;
+        this.stockName = stockName;
     }
 
     public void setStockSymbol(String stockSymbol) {

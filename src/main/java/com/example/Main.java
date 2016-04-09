@@ -31,7 +31,7 @@ public class Main {
     // db instance
     // monitorstockpriceinstance.ctoveuujovpy.us-east-1.rds.amazonaws.com:3306
     private static Object listAll(Request req) throws IOException {
-        String baseUrl = "http://query.yahooapis.com/v1/public/yql?q=";
+        /*String baseUrl = "http://query.yahooapis.com/v1/public/yql?q=";
 //        String query = "select * from upcoming.events where location='San Francisco' and search_text='dance'";
         String query = "select * from yahoo.finance.quote where symbol in ('YHOO','AAPL','GOOG','MSFT')";
         String endUrl="&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
@@ -66,9 +66,9 @@ public class Main {
 
         conn.disconnect();
         return sb.toString();
-//        InputStream is = fullUrl.openStream();
+//        InputStream is = fullUrl.openStream();*/
 
-//        return "list";
+        return "list";
     }
 
     private static Object getHistory(Request req) {

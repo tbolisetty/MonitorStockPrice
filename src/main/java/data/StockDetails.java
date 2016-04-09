@@ -1,4 +1,4 @@
-package com.example;
+package data;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -29,6 +29,9 @@ public class StockDetails {
     private double volume;
 
 
+    public StockDetails(){
+
+    }
     public StockDetails(String stockSymbol, Date date, float open, float high, float low, float currentPrice, float adjClose, double volume) {
 
         this.stockSymbol = stockSymbol;

@@ -1,4 +1,4 @@
-package com.example;
+package data;
 
 /**
  * Created by tejas on 4/7/2016.
@@ -6,6 +6,12 @@ package com.example;
 public class UsersStock {
 
     private int userId;
+
+    public UsersStock(int userId, String stockSymbol) {
+        this.userId = userId;
+        this.stockSymbol = stockSymbol;
+    }
+
     private String stockSymbol;
 
     public int getUserId() {
