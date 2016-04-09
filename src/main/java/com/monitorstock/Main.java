@@ -1,19 +1,17 @@
-package com.example;
+package com.monitorstock;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import controller.CompanyController;
 import data.Stock;
 import data.StockDetails;
 import spark.Request;
-import spark.Response;
 
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,14 +29,28 @@ public class Main {
     public static void main(String[] args) {
         controller = new CompanyController();
         gson = new Gson();
+        Main m= new Main();
+        get("/",(req,res) -> m.render("/home.html"));
         get("/list/:id", (req, res) -> listCompanies(req));
-        post("/stock/:id/:company", (req, res) -> add(req));
+        post("/stock/:id", (req, res) -> add(req));
         get("/history/:id/:company/:startDate/:endDate", (req, res) -> getHistory(req));
         delete("stock/:id/:company", (req, res) -> deleteStock(req));
+
+    }
+
+    public String render(String s) {
+        try{
+
+            URL url=getClass().getResource(s);
+            Path path= Paths.get(url.toURI());
+            return new String (Files.readAllBytes(path), Charset.defaultCharset());
+        }catch (Exception e){
+            System.out.println(e);;
+        }
+        return null;
     }
 
 
-    // db instance
     // monitorstockpriceinstance.ctoveuujovpy.us-east-1.rds.amazonaws.com:3306
     private static Object listCompanies(Request req) throws IOException {
         ArrayList<Stock> stocks = controller.listCompanies(Integer.parseInt(req.params("id")));
@@ -66,10 +78,10 @@ public class Main {
 
     private static String add(Request req) {
         int userId = Integer.parseInt(req.params("id"));
-        String company = req.params("company");
+        String company = req.queryParams("stock");
         boolean added = controller.addNewCompany(userId, company);
         if (added) {
-            return req.params("company") + " Added";
+            return company + " Added";
         }
         return "Error";
     }

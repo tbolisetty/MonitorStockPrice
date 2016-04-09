@@ -73,6 +73,13 @@
       </plugin>
     </plugins>
 
+    <resources>
+      <resource>
+        <directory>
+          src/resources
+        </directory>
+      </resource>
+    </resources>
   </build>
 
 </project>

@@ -1,0 +1,110 @@
+<html>
+<head>
+    <script   src="https://code.jquery.com/jquery-2.2.3.min.js"   integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script>
+        window.onload = getStocks.bind(null);
+        function getStocks(callback) {
+            $.get("/list/1", function (data) {
+                var tableBody = $("#stocksTable");
+                var stocks = jQuery.parseJSON(data);
+
+                $("#stocksTable").find("tr").remove();
+                for ( var stock in stocks) {
+                    var num = stock*1 +1;
+                    var row = document.createElement("tr");
+                    var count = document.createElement("td")
+                    count.innerHTML = num;
+                    var name = document.createElement("td")
+                    name.innerHTML = stocks[stock].stockSymbol;
+                    var price = document.createElement("td")
+                    price.innerHTML = stocks[stock].currentPrice;
+                    var addBtn = document.createElement("button");
+                    addBtn.className = "btn btn-danger";
+                    addBtn.innerHTML = "Remove";
+                    var removecall = 'removeStock("'+stocks[stock].stockSymbol+'")';
+                    addBtn.setAttribute("onclick", removecall);
+                    row.appendChild(count);
+                    row.appendChild(name);
+                    row.appendChild(price);
+                    row.appendChild(addBtn);
+                    tableBody.append(row);
+
+
+                }
+
+            });
+        }
+        function removeStock(id) {
+            var completeUrl = 'stock/1/'+id;
+
+            $.ajax({
+                type: 'DELETE',
+                url: completeUrl
+            })
+
+            getStocks();
+        }
+    </script>
+
+</head>
+<body>
+<form class="form-inline" action="/stock/1" method="post">
+    <div class="form-group">
+        <label for="addStockId">Add Stock</label>
+        <input name="stock" type="text" class="form-control" id="addStockId" placeholder="Stock ID">
+    </div>
+    <button type="submit" class="btn btn-primary">Add</button>
+</form>
+<table id="stocksTable" class="table">
+    <caption>Your Stock List</caption>
+    <th>
+    <td>
+        Stock ID
+    </td>
+    <td>
+        Stock Price
+    </td>
+    <td>
+        Remove
+    </td>
+    </th>
+
+    <!--<tr>-->
+        <!--<td>-->
+            <!--3-->
+        <!--</td>-->
+        <!--<td>-->
+            <!--APPL-->
+        <!--</td>-->
+        <!--<td>-->
+            <!--100$-->
+        <!--</td>-->
+        <!--<td>-->
+            <!--<button class="btn btn-default" data-toggle="modal" data-target="#myModal">View History</button>-->
+        <!--</td>-->
+        <!--<td>-->
+            <!--<button class="btn btn-danger">Remove</button>-->
+        <!--</td>-->
+    <!--</tr>-->
+</table>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

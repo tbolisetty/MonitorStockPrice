@@ -1,6 +1,4 @@
-package com.example;
-
-import org.junit.Test;
+package com.monitorstock;
 
 public class SolutionTest {
 
