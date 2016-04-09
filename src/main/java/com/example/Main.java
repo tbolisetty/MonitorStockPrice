@@ -32,9 +32,9 @@ public class Main {
         controller = new CompanyController();
         gson = new Gson();
         get("/list/:id", (req, res) -> listCompanies(req));
-        post("/stock", (req, res) -> add(req));
-        get("/history/:id", (req, res) -> getHistory(req));
-        delete("stock/:id", (req, res) -> deleteStock(req));
+        post("/stock/:id/:company", (req, res) -> add(req));
+        get("/history/:id/:company/:startDate/:endDate", (req, res) -> getHistory(req));
+        delete("stock/:id/:company", (req, res) -> deleteStock(req));
     }
 
 

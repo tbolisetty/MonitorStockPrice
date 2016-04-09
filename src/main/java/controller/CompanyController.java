@@ -74,9 +74,11 @@ public class CompanyController {
                 ArrayList<StockDetails> sd = db.getCompanyHistory(company, startDate, endDate);
                 //fetch all the previous data before temp from date startDate mentioned
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+                Date s= new Date();
+                if(sd.size()>0){
                 String dateInString = sd.get(0).getDate().toString();
-                Date s = sdf.parse(dateInString);
-
+                s = sdf.parse(dateInString);
+                }
                 if (s.after(startDate)) {
                     //fetch all data from yahoo
                     ArrayList<StockDetails> stockDetails = yahooAPI.getYahooHistoryData(company, startDate, endDate);
